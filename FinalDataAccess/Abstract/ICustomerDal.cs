@@ -1,6 +1,7 @@
 ﻿using System;
 using FinalEntities.Concrete;
 using System.Text;
+using Core.DataAccess;
 
 namespace FinalDataAccess.Abstract
 {

@@ -1,5 +1,6 @@
 ﻿using System;
-using FinalEntities.Abstract;
+using Core.Entities;
+
 
 namespace FinalEntities.Concrete
 {

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using FinalEntities.Abstract;
+using Core.Entities;
 
-namespace FinalDataAccess.Abstract
+namespace Core.DataAccess
 {
     //generic constrain, where
     //class : referans tip olmalı
