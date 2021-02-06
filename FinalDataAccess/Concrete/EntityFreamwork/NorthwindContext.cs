@@ -11,9 +11,9 @@ namespace FinalDataAccess.Concrete.EntityFreamwork
         {
             optionsBuilder.UseSqlServer(@"Server =(localdb)\ProjectsV13;Database=Northwind;Trusted_Connection=true");
         }
-        public DbSet<Product> Product { get; set; }
-        public DbSet<Category> Category { get; set; }
-        public DbSet<Customer> Customer { get; set; }
+        public DbSet<Product> Products { get; set; }
+        public DbSet<Category> Categories { get; set; }
+        public DbSet<Customer> Customers { get; set; }
 
         public DbSet<Order> Orders  { get; set; }
 
