@@ -12,15 +12,29 @@ using FinalDataAccess.Concrete.EntityFreamwork;
 //open-closed => O
 namespace ConsoleUI
 {
-    class Class1
+    public class Class1
     {
         static void Main(string[] args)
         {
-            ProductManager productManager = new ProductManager(new EfProductDal());
-            
-            foreach (var product in productManager.GetAll())
+            ProductGetAll();
+            CategoryGetAll();
+        }
+        private static void CategoryGetAll()
+        {
+            CategoryManager categoryManager = new CategoryManager(new EfCategoryDal());
+
+            foreach (var category in categoryManager.GetAll())
             {
-                Console.WriteLine(product.ProductName);
+                Console.WriteLine(category.CategoryName);
+            }
+        }
+        private static void ProductGetAll()
+        {
+            ProductManager productManager = new ProductManager(new EfProductDal());
+
+            foreach (var product in productManager.GetProductDetail())
+            {
+                Console.WriteLine(product.ProductName+ " "+ product.CategoryName);
             }
         }
     }

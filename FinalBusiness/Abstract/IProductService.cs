@@ -3,6 +3,7 @@ using FinalDataAccess.Abstract;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using FinalEntities.DTO;
 
 namespace FinalBusiness.Abstract
 {
@@ -11,5 +12,6 @@ namespace FinalBusiness.Abstract
         List<Product> GetAll();
         List<Product> GetAllByCategoryId(int Id);
         List<Product> GetByUnitPrice(decimal min, decimal max);
+        List<ProductDetailDto> GetProductDetail();
     }
 }

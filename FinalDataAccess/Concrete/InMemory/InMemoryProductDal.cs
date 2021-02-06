@@ -1,5 +1,6 @@
 ﻿using FinalDataAccess.Abstract;
 using FinalEntities.Concrete;
+using FinalEntities.DTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,7 @@ namespace FinalDataAccess.Concrete.InMemory
 {
     public class InMemoryProductDal : IProductDal
     {
-        List<Product> _products;
+        public List<Product> _products;
         public InMemoryProductDal()
         {
             _products = new List<Product>
@@ -51,6 +52,11 @@ namespace FinalDataAccess.Concrete.InMemory
         public List<Product> GetAllByCategory(int CategoryId)
         {
             return _products.Where(p => p.CategoryId == CategoryId).ToList();
+        }
+
+        public List<ProductDetailDto> GetProductDetails()
+        {
+            throw new NotImplementedException();
         }
 
         public void Update(Product product)
