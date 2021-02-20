@@ -7,6 +7,10 @@ using FinalDataAccess.Abstract;
 using FinalEntities.DTO;
 using Core.Utilities.Results;
 using FinalBusiness.Constants;
+using FluentValidation;
+using FinalBusiness.ValidationRules.FluentValidition;
+using Core.CrossCuttingConcerns.Validation;
+using Core.Aspects.Autofac.Validation;
 
 namespace FinalBusiness.Concrete
 {
@@ -17,19 +21,31 @@ namespace FinalBusiness.Concrete
         {
             _productDal = productDal;
         }
-
+        [ValidationAspect(typeof(ProductValidator))]
         public IResult Add(Product product)
         {
             //business codes
-            if (product.ProductName.Length<2)
-            {
-                //magic string
-                return new ErrorResult(Messages.ProductNameInvalid);
-            }
+            //validation codes are different things.
+            //if (product.UnitPrice <= 0)
+            //{
+            //    return new ErrorResult(Messages.UnitPriceInvalid);
+            //}
+            //if (product.ProductName.Length<2)
+            //{
+            //    //magic string
+            //    return new ErrorResult(Messages.ProductNameInvalid);
+            //}
+
+            //var context = new ValidationContext<Product>(product);//doğrulanacak olanı al
+            //ProductValidator productValidatior = new ProductValidator();//Hangi kurallar
+            //var result = productValidatior.Validate(context);//doğrula
+            //if (!result.IsValid)
+            //{
+            //    throw new ValidationException(result.Errors);//error yolla api
+            //}
+            ValidationTool.Validate(new ProductValidator(), product);
             _productDal.Add(product);
-            return new SuccessResult(Messages.ProductAdded);
-            
-            
+            return new SuccessResult(Messages.ProductAdded);  
         }
 
         public IDataResult<List<Product>> GetAll()
