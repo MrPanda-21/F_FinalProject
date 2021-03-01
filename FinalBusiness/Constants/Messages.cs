@@ -11,6 +11,8 @@ namespace FinalBusiness.Constants
         public static string MaintenanceTime = "Sistem bakımda";
         public static string ProductsListed = "Ürünler listelendi!";
 
-        public static string UnitPriceInvalid { get; internal set; }
+        public static string UnitPriceInvalid = "Ürün fiyatı geçersiz...";
+        public static string ProductCountOfCategoryError = "";
+        public static string CountNotAvaible { get; internal set; }
     }
 }

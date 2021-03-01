@@ -11,20 +11,35 @@ using FluentValidation;
 using FinalBusiness.ValidationRules.FluentValidition;
 using Core.CrossCuttingConcerns.Validation;
 using Core.Aspects.Autofac.Validation;
+using System.Linq;
+using Core.Utilities.Business;
 
 namespace FinalBusiness.Concrete
 {
     public class ProductManager : IProductService
     {
-        public IProductDal _productDal;
-        public ProductManager(IProductDal productDal)
+        IProductDal _productDal;
+        ICategoryService _categoryService;
+       
+        public ProductManager(IProductDal productDal, ICategoryService categoryService)
         {
             _productDal = productDal;
+            _categoryService = categoryService;
+          
+            
         }
         [ValidationAspect(typeof(ProductValidator))]
         public IResult Add(Product product)
         {
-            //business codes
+            IResult result = BusinessRules.Run(CheckIfProductNameExist(product.ProductName),
+                CheckIfProductCountOfCategoryCorrect(product.CategoryId),
+                CheckIfCategoryCountAvaible());
+            if (result != null)
+            {
+                return result;
+            }
+            _productDal.Add(product);
+            return new ErrorResult(Messages.ProductCountOfCategoryError);
             //validation codes are different things.
             //if (product.UnitPrice <= 0)
             //{
@@ -43,9 +58,7 @@ namespace FinalBusiness.Concrete
             //{
             //    throw new ValidationException(result.Errors);//error yolla api
             //}
-            ValidationTool.Validate(new ProductValidator(), product);
-            _productDal.Add(product);
-            return new SuccessResult(Messages.ProductAdded);  
+            
         }
 
         public IDataResult<List<Product>> GetAll()
@@ -82,6 +95,34 @@ namespace FinalBusiness.Concrete
         public IDataResult<List<ProductDetailDto>> GetProductDetail()
         {
             return new SuccessDataResult<List<ProductDetailDto>>( _productDal.GetProductDetails(),Messages.ProductsListed);
+        }
+
+        private IResult CheckIfProductCountOfCategoryCorrect(int categoryId)
+        {
+            var result = _productDal.GetAll(p => categoryId == p.CategoryId).Count;
+            if (result >= 10)
+            {
+                return new ErrorResult(Messages.ProductCountOfCategoryError);
+            }
+            return new SuccessResult();
+        }
+        private IResult CheckIfProductNameExist(string productName)
+        {
+            var result = _productDal.GetAll(p => p.ProductName == productName).Any();
+            if (result)
+            {
+                return new ErrorResult(Messages.ProductNameInvalid);
+            }
+            return new SuccessResult();
+        }
+        private IResult CheckIfCategoryCountAvaible()
+        {
+            var result = _categoryService.GetAll();
+            if (result.Data.Count> 15)
+            {
+                return new ErrorResult(Messages.CountNotAvaible);
+            }
+            return new SuccessResult();
         }
     }
 }
