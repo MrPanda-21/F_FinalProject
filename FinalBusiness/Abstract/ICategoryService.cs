@@ -10,5 +10,9 @@ namespace FinalBusiness.Abstract
     {
         IDataResult<List<Category>> GetAll();
         IDataResult<Category> GetById(int categoryId);
+
+        IResult Delete(Category category);
+        IResult Update(Category category);
+        IResult Add(Category category);
     }
 }

@@ -13,6 +13,12 @@ namespace FinalBusiness.Constants
 
         public static string UnitPriceInvalid = "Ürün fiyatı geçersiz...";
         public static string ProductCountOfCategoryError = "";
-        public static string CountNotAvaible { get; internal set; }
+        public static string CategoriesFound = "All categories were found";
+
+        public static string CountNotAvaible = "Count not avaible";
+        public static string CategoryUpdated = "Category Updated!";
+        public static string CategoryDeleted = "Category deleted...";
+        public static string CategoryAdded = "Category added";
+        public static string CategoryFound = "Category you searched found";
     }
 }
