@@ -6,7 +6,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\FinalBusiness\FinalBusiness.csproj" />
     <ProjectReference Include="..\FinalDataAccess\FinalDataAccess.csproj" />
     <ProjectReference Include="..\FinalEntities\FinalEntities.csproj" />
   </ItemGroup>

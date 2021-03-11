@@ -2,6 +2,7 @@
 using Autofac.Extras.DynamicProxy;
 using Castle.DynamicProxy;
 using Core.Utilities.Interceptors;
+using Core.Utilities.Security.JWT;
 using FinalBusiness.Abstract;
 using FinalBusiness.Concrete;
 using FinalDataAccess.Abstract;
@@ -20,6 +21,9 @@ namespace FinalBusiness.DependencyResolvers.Autofac
             builder.RegisterType<EfProductDal>().As<IProductDal>().SingleInstance();
             builder.RegisterType<CategoryManager>().As<ICategoryService>().SingleInstance();
             builder.RegisterType<EfCategoryDal>().As<ICategoryDal>().SingleInstance();
+            builder.RegisterType<AuthManager>().As<IAuthService>().SingleInstance();
+            builder.RegisterType<JwtHelper>().As<ITokenHelper>().SingleInstance();
+
             var assembly = System.Reflection.Assembly.GetExecutingAssembly();
 
             builder.RegisterAssemblyTypes(assembly).AsImplementedInterfaces()
