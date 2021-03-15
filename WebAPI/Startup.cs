@@ -40,10 +40,11 @@ namespace WebAPI
             //Autofac, Ninject, CatleWindsor, StructureMap, LightInject, DryInject --> IoC Container
             //AOP
             services.AddControllers();
-            //benim yerime new ler,  Ýçinde DATA tutmuyor ise kullanýlýr...Data ise AddScope olabilir...
+            //benim yerime new ler,  ??inde DATA tutmuyor ise kullan?l?r...Data ise AddScope olabilir...
             //services.AddSingleton<IProductService,ProductManager>();
             //services.AddSingleton<IProductDal, EfProductDal>();
-            
+
+            services.AddCors();
             var tokenOptions = Configuration.GetSection("TokenOptions").Get<TokenOptions>();
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -74,6 +75,8 @@ namespace WebAPI
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseCors(builder => builder.WithOrigins("http://localhost:4200").AllowAnyHeader());
 
             app.UseHttpsRedirection();
 

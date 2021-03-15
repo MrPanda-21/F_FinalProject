@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace WebAPI.Controllers
@@ -32,6 +33,7 @@ namespace WebAPI.Controllers
             //IProductService productService =
             //    new ProductManager(new EfProductDal());
             //Swagger
+            Thread.Sleep(5000);
             var result = _productService.GetAll();
             if (result.Success)
             {
