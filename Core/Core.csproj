@@ -14,4 +14,10 @@
     <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.8.0" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.8.0" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="CrossCuttingConcerns\Caching\" />
+    <Folder Include="CrossCuttingConcerns\Caching\Microsoft\" />
+    <Folder Include="Aspects\Autofac\Caching\" />
+    <Folder Include="Aspects\Autofac\Transaction\" />
+  </ItemGroup>
 </Project>

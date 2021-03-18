@@ -13,6 +13,9 @@ using Core.CrossCuttingConcerns.Validation;
 using Core.Aspects.Autofac.Validation;
 using System.Linq;
 using Core.Utilities.Business;
+using Core.Aspects.Autofac.Caching;
+using Core.Aspects.Autofac.Transaction;
+using Core.Aspects.Autofac;
 
 namespace FinalBusiness.Concrete
 {
@@ -28,6 +31,10 @@ namespace FinalBusiness.Concrete
           
             
         }
+
+        [PerformanceAspect(interval:3)]
+        [CacheRemoveAspect("IProductService.Get")]
+        [CacheAspect(duration:200,Priority = 2)]
         [ValidationAspect(typeof(ProductValidator))]
         public IResult Add(Product product)
         {
@@ -60,7 +67,7 @@ namespace FinalBusiness.Concrete
             //}
             
         }
-
+        [CacheAspect]
         public IDataResult<List<Product>> GetAll()
         {
             //Business Codes
@@ -123,6 +130,13 @@ namespace FinalBusiness.Concrete
                 return new ErrorResult(Messages.CountNotAvaible);
             }
             return new SuccessResult();
+        }
+
+        [TransactionScopeAspect]
+        public IResult AddTransactionalTest(Product product)
+        {
+            Add(product);
+            return null;
         }
     }
 }
