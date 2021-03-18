@@ -14,7 +14,7 @@ namespace Core.Extensions
             {
                 module.Load(serviceCollection); //her bir module'un Load ını çalıştırır.
             }
-            return ServiceTool.Create(serviceCollection) //bunları çalıştırır.
+            return ServiceTool.Create(serviceCollection); //bunları çalıştırır.
         }
     }
 }

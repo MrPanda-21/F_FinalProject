@@ -51,7 +51,7 @@ namespace FinalBusiness.Concrete
         {
             
             byte[]  passwordHash, passwordSalt;
-            HashingHelper.CreatePasswordHash(userForRegisterDto.Pasword,out passwordHash,out passwordSalt);
+            HashingHelper.CreatePasswordHash(userForRegisterDto.Password,out passwordHash,out passwordSalt);
 
             var user = new User { Email = userForRegisterDto.Email, FirstName = userForRegisterDto.FirstName, LastName = userForRegisterDto.LastName, Status = true, PasswordHash = passwordHash, PasswordSalt = passwordSalt };
             _userService.Add(user);
