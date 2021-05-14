@@ -7,29 +7,32 @@ namespace Core.Utilities.Security.Hashing
     public class HashingHelper
     {
         public static void CreatePasswordHash
-            (string password, out byte[] passwordHash, out byte[] passwordSalt)//void yaptık ve yinede out ile son 2 tanesinin değerini değiştirip dışarı verdik.
+            (string password, out byte[] passwordHash, out byte[] passwordSalt)
         {
-            using (var hmac = new System.Security.Cryptography.HMACSHA512())//Hazır algoritmalardan birini şeçtik, her kullanıcı için yeni bir Key değeri tutar bu...
+            using (var hmac = new System.Security.Cryptography.HMACSHA512())
             {
-                passwordSalt = hmac.Key; //alogritmanın keyini kullanmayı tercih ettik salt için.
-                passwordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));//direk ona generate ettirdik hash codunu
+                passwordSalt = hmac.Key;
+                passwordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
+
             }
         }
-        public static bool VerifyPasswordHash(string password, byte[] passwordHash,byte[] passwordSalt)
+
+        public static bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
         {
-            using (var hmac = new System.Security.Cryptography.HMACSHA512(passwordSalt))//passwordSalt ile beraber koyulmuş oldu.
+            using (var hmac = new System.Security.Cryptography.HMACSHA512(passwordSalt))
             {
-                var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));//tekrar aynı yolla hash üretilir.Encoding ile byte türüne getirilmiş olur.
-                for (int i = 0; i < computedHash.Length; i++) //forla tüm değerler alındı.
+                var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
+                for (int i = 0; i < computedHash.Length; i++)
                 {
-                    if (computedHash[i] != passwordHash[i]) //değerlerini kontrol ettik.
+                    if (computedHash[i] != passwordHash[i])
                     {
                         return false;
                     }
-                    
                 }
                 return true;
             }
+
+
         }
     }
 }

@@ -10,12 +10,9 @@ namespace FinalBusiness.Abstract
 {
     public interface IUserService
     {
-        IDataResult<User> GetUserByMail(string email);
-        IDataResult<User> GetUserById(int Id);
-        IDataResult<List<User>> GetAll();
-        IResult Add(User car);
-        IResult Update(User car);
-        IResult Delete(User car);
-        IDataResult<List<OperationClaim>> GetClaims(User user);
+
+        List<OperationClaim> GetClaims(User user);
+        void Add(User user);
+        User GetByMail(string email);
     }
 }

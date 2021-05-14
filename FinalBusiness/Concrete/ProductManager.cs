@@ -16,6 +16,7 @@ using Core.Utilities.Business;
 using Core.Aspects.Autofac.Caching;
 using Core.Aspects.Autofac.Transaction;
 using Core.Aspects.Autofac;
+using FinalBusiness.BusinessAspects.Autofac;
 
 namespace FinalBusiness.Concrete
 {
@@ -32,6 +33,7 @@ namespace FinalBusiness.Concrete
             
         }
 
+        [SecuredOperation("products.add")]
         [PerformanceAspect(interval:3)]
         [CacheRemoveAspect("IProductService.Get")]
         [CacheAspect(duration:200,Priority = 2)]
@@ -45,8 +47,11 @@ namespace FinalBusiness.Concrete
             {
                 return result;
             }
+
             _productDal.Add(product);
-            return new ErrorResult(Messages.ProductCountOfCategoryError);
+
+            return new SuccessResult(Messages.ProductAdded);
+
             //validation codes are different things.
             //if (product.UnitPrice <= 0)
             //{
@@ -65,7 +70,7 @@ namespace FinalBusiness.Concrete
             //{
             //    throw new ValidationException(result.Errors);//error yolla api
             //}
-            
+
         }
         [CacheAspect]
         public IDataResult<List<Product>> GetAll()
@@ -107,7 +112,7 @@ namespace FinalBusiness.Concrete
         private IResult CheckIfProductCountOfCategoryCorrect(int categoryId)
         {
             var result = _productDal.GetAll(p => categoryId == p.CategoryId).Count;
-            if (result >= 10)
+            if (result >= 20)
             {
                 return new ErrorResult(Messages.ProductCountOfCategoryError);
             }

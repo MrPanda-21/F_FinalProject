@@ -14,8 +14,8 @@ namespace FinalBusiness.Concrete
 {
     public class AuthManager : IAuthService
     {
-        IUserService _userService;
-        ITokenHelper _tokenHelper;
+        private IUserService _userService;
+        private ITokenHelper _tokenHelper;
 
         public AuthManager(IUserService userService, ITokenHelper tokenHelper)
         {
@@ -23,49 +23,53 @@ namespace FinalBusiness.Concrete
             _tokenHelper = tokenHelper;
         }
 
-        public IDataResult<AccessToken> CreateAccessToken(User user)
+        public IDataResult<User> Register(UserForRegisterDto userForRegisterDto, string password)
         {
-            var claims = _userService.GetClaims(user);
-            var token = _tokenHelper.CreateToken(user, claims.Data);
-            return new SuccessDataResult<AccessToken>(token,Messages.TokenCreated);
+            byte[] passwordHash, passwordSalt;
+            HashingHelper.CreatePasswordHash(password, out passwordHash, out passwordSalt);
+            var user = new User
+            {
+                Email = userForRegisterDto.Email,
+                FirstName = userForRegisterDto.FirstName,
+                LastName = userForRegisterDto.LastName,
+                PasswordHash = passwordHash,
+                PasswordSalt = passwordSalt,
+                Status = true
+            };
+            _userService.Add(user);
+            return new SuccessDataResult<User>(user, "Kayıt oldu");
         }
 
         public IDataResult<User> Login(UserForLoginDto userForLoginDto)
         {
-            var user = _userService.GetUserByMail(userForLoginDto.email);
-            if (user == null)
+            var userToCheck = _userService.GetByMail(userForLoginDto.email);
+            if (userToCheck == null)
             {
-                return new ErrorDataResult<User>(Messages.WrongMail);
+                return new ErrorDataResult<User>("Kullanıcı bulunamadı");
             }
-            byte[] passwordHash, passwordSalt;
-            HashingHelper.CreatePasswordHash(userForLoginDto.password, out passwordHash, out passwordSalt);
-            var result = HashingHelper.VerifyPasswordHash(userForLoginDto.password, passwordHash, passwordSalt);
-            if (result)
+
+            if (!HashingHelper.VerifyPasswordHash(userForLoginDto.password, userToCheck.PasswordHash, userToCheck.PasswordSalt))
             {
-                return new SuccessDataResult<User>(user.Data,Messages.Logined);
+                return new ErrorDataResult<User>("Parola hatası");
             }
-            return new ErrorDataResult<User>(Messages.IncorrectPassword);
+
+            return new SuccessDataResult<User>(userToCheck, "Başarılı giriş");
         }
 
-        public IDataResult<User> Register(UserForRegisterDto userForRegisterDto)
+        public IResult UserExists(string email)
         {
-            
-            byte[]  passwordHash, passwordSalt;
-            HashingHelper.CreatePasswordHash(userForRegisterDto.Password,out passwordHash,out passwordSalt);
-
-            var user = new User { Email = userForRegisterDto.Email, FirstName = userForRegisterDto.FirstName, LastName = userForRegisterDto.LastName, Status = true, PasswordHash = passwordHash, PasswordSalt = passwordSalt };
-            _userService.Add(user);
-            return new SuccessDataResult<User>(user, Messages.Registered);
+            if (_userService.GetByMail(email) != null)
+            {
+                return new ErrorResult("Kullanıcı mevcut");
+            }
+            return new SuccessResult();
         }
 
-        public IResult UserExist(User user)
+        public IDataResult<AccessToken> CreateAccessToken(User user)
         {
-            var result = _userService.GetUserByMail(user.Email);
-            if (result != null)
-            {
-                return new SuccessResult(result.Message);
-            }
-            return new ErrorResult(result.Message);
+            var claims = _userService.GetClaims(user);
+            var accessToken = _tokenHelper.CreateToken(user, claims);
+            return new SuccessDataResult<AccessToken>(accessToken, "Token oluşturuldu");
         }
     }
 }

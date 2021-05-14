@@ -11,8 +11,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace FinalBusiness.BusinessAspects.Autofac
 {
-    public class SecuredOperation : MethodInterception
+    public class SecuredOperation: MethodInterception
     {
+
         private string[] _roles;
         private IHttpContextAccessor _httpContextAccessor;
 

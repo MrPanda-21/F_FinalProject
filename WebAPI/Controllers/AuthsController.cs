@@ -13,7 +13,8 @@ namespace WebAPI.Controllers
     [ApiController]
     public class AuthsController : ControllerBase
     {
-        IAuthService _authService;
+        
+        private IAuthService _authService;
 
         public AuthsController(IAuthService authService)
         {
@@ -21,36 +22,40 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost("login")]
-        public IActionResult Login(UserForLoginDto userForLoginDto)
+        public ActionResult Login(UserForLoginDto userForLoginDto)
         {
             var userToLogin = _authService.Login(userForLoginDto);
             if (!userToLogin.Success)
             {
-                return BadRequest(userToLogin);
+                return BadRequest(userToLogin.Message);
             }
 
-            var token = _authService.CreateAccessToken(userToLogin.Data);
-            if (!token.Success)
+            var result = _authService.CreateAccessToken(userToLogin.Data);
+            if (result.Success)
             {
-                return BadRequest(token);
+                return Ok(result.Data);
             }
-            return Ok(token);
+
+            return BadRequest(result.Message);
         }
 
         [HttpPost("register")]
-        public IActionResult Register(UserForRegisterDto userForRegisterDto)
+        public ActionResult Register(UserForRegisterDto userForRegisterDto)
         {
-            var userToRegister = _authService.Register(userForRegisterDto);
-            if (!userToRegister.Success)
+            var userExists = _authService.UserExists(userForRegisterDto.Email);
+            if (!userExists.Success)
             {
-                return BadRequest(userToRegister);
+                return BadRequest(userExists.Message);
             }
-            var token = _authService.CreateAccessToken(userToRegister.Data);
-            if (!token.Success)
+
+            var registerResult = _authService.Register(userForRegisterDto, userForRegisterDto.Password);
+            var result = _authService.CreateAccessToken(registerResult.Data);
+            if (result.Success)
             {
-                return BadRequest(token);
+                return Ok(result.Data);
             }
-            return Ok(token);
+
+            return BadRequest(result.Message);
         }
     }
 }
